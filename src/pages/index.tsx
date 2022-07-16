@@ -2,37 +2,11 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { gql, useQuery, useMutation } from '@apollo/client'
-
-const GET_TODOS = gql`
-  query findTodos {
-    todos {
-      text
-      done
-      user {
-        name
-      }
-    }
-  }
-`
-
-const CREATE_TODO = gql`
-  mutation createTodo {
-    createTodo(input: { text: "todo", userId: "4" }) {
-      user {
-        id
-      }
-      text
-      done
-    }
-  }
-`
+import { useFindTodosQuery, useCreateTodoMutation } from '../../graphql/generated'
 
 const Home: NextPage = () => {
-  const { loading, error, data } = useQuery(GET_TODOS, {
-    variables: { language: 'english' },
-  })
-  const [mutateFunction, { data: created }] = useMutation(CREATE_TODO)
+  const { loading, error, data } = useFindTodosQuery()
+  const [mutateFunction, { data: created }] = useCreateTodoMutation()
 
   if (loading) return <p>Loading ...</p>
   if (error) return <p>Error: {JSON.stringify(error)}</p>
